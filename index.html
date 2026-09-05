@@ -1,0 +1,1613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Smart Energy Monitoring System</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+.navbar {
+    background: #111827;
+    color: white;
+    min-height: 80px;
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.student-name {
+    font-size: 20px;
+    font-weight: bold;
+    min-width: 200px;
+}
+
+.project-title {
+    text-align: center;
+}
+
+.project-title h1 {
+    font-size: 25px;
+}
+
+.project-title p {
+    margin-top: 5px;
+    color: #cbd5e1;
+    font-size: 13px;
+}
+
+.live-status {
+    color: #86efac;
+    font-weight: bold;
+    min-width: 200px;
+    text-align: right;
+}
+
+.container {
+    max-width: 1300px;
+    margin: auto;
+    padding: 30px;
+}
+
+.status-box {
+    text-align: center;
+    padding: 20px;
+    font-size: 22px;
+    font-weight: bold;
+    border-radius: 12px;
+    margin-bottom: 25px;
+}
+
+.normal {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.warning {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.fault {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.section-title {
+    margin: 30px 0 15px;
+    font-size: 22px;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 14px;
+    text-align: center;
+    box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+}
+
+.card h3 {
+    color: #64748b;
+    font-size: 16px;
+}
+
+.value {
+    font-size: 30px;
+    font-weight: bold;
+    margin-top: 15px;
+    color: #111827;
+}
+
+.unit {
+    font-size: 16px;
+    color: #64748b;
+}
+
+.health-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+}
+
+.health-card {
+    background: white;
+    padding: 20px;
+    border-radius: 14px;
+    box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+    text-align: center;
+}
+
+.health-card h4 {
+    margin-bottom: 10px;
+    color: #64748b;
+}
+
+.health-value {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.graph-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+}
+
+.graph-box {
+    background: white;
+    padding: 25px;
+    border-radius: 14px;
+    box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+}
+
+.graph-box h2 {
+    margin-bottom: 15px;
+}
+
+.controls {
+    background: white;
+    margin-top: 25px;
+    padding: 25px;
+    border-radius: 14px;
+    text-align: center;
+    box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+}
+
+.controls h2 {
+    margin-bottom: 15px;
+}
+
+button {
+    border: none;
+    padding: 13px 20px;
+    margin: 6px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    opacity: 0.85;
+}
+
+.btn-normal {
+    background: #16a34a;
+    color: white;
+}
+
+.btn-warning {
+    background: #d97706;
+    color: white;
+}
+
+.btn-fault {
+    background: #dc2626;
+    color: white;
+}
+
+.btn-start {
+    background: #2563eb;
+    color: white;
+}
+
+.btn-stop {
+    background: #475569;
+    color: white;
+}
+
+.btn-reset {
+    background: #7c3aed;
+    color: white;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+.stat-box {
+    background: white;
+    padding: 22px;
+    border-radius: 14px;
+    box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+    text-align: center;
+}
+
+.stat-box h4 {
+    color: #64748b;
+}
+
+.stat-value {
+    font-size: 25px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.info-box {
+    background: white;
+    padding: 25px;
+    border-radius: 14px;
+    box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+}
+
+.info-box h2 {
+    margin-bottom: 15px;
+}
+
+.info-box p {
+    margin: 12px 0;
+}
+
+.log-box {
+    background: #111827;
+    color: #d1d5db;
+    padding: 20px;
+    border-radius: 14px;
+    max-height: 260px;
+    overflow-y: auto;
+}
+
+.log-entry {
+    padding: 8px;
+    border-bottom: 1px solid #334155;
+}
+
+.table-box {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+th {
+    background: #1e293b;
+    color: white;
+}
+
+th,
+td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+footer {
+    margin-top: 35px;
+    background: #111827;
+    color: #cbd5e1;
+    text-align: center;
+    padding: 22px;
+}
+
+@media(max-width: 900px) {
+
+    .navbar {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+
+    .student-name,
+    .live-status {
+        min-width: auto;
+        text-align: center;
+    }
+
+    .cards,
+    .health-grid,
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .graph-grid,
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media(max-width: 600px) {
+
+    .cards,
+    .health-grid,
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .container {
+        padding: 15px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="navbar">
+
+    <div class="student-name">
+        Khanderao Wani
+    </div>
+
+    <div class="project-title">
+        <h1>Smart Energy Monitoring System</h1>
+        <p>ESP32 Based IoT Energy Monitoring and Fault Detection</p>
+    </div>
+
+    <div class="live-status" id="topStatus">
+        ● SYSTEM READY
+    </div>
+
+</div>
+
+
+<div class="container">
+
+<div id="statusBox" class="status-box normal">
+    SYSTEM STATUS: READY
+</div>
+
+
+<h2 class="section-title">Electrical Parameters</h2>
+
+<div class="cards">
+
+    <div class="card">
+        <h3>Voltage</h3>
+        <div class="value">
+            <span id="voltage">230.00</span>
+            <span class="unit">V</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>Current</h3>
+        <div class="value">
+            <span id="current">2.00</span>
+            <span class="unit">A</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>Active Power</h3>
+        <div class="value">
+            <span id="power">460.00</span>
+            <span class="unit">W</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>Total Energy</h3>
+        <div class="value">
+            <span id="energy">0.0000</span>
+            <span class="unit">kWh</span>
+        </div>
+    </div>
+
+</div>
+
+
+<h2 class="section-title">Energy Cost Monitoring</h2>
+
+<div class="cards">
+
+    <div class="card">
+        <h3>Electricity Cost</h3>
+        <div class="value">
+            ₹<span id="cost">0.0000</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>Electricity Rate</h3>
+        <div class="value">
+            ₹<span id="electricityRate">8.00</span>
+            <span class="unit">/ kWh</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>Current Power Cost Rate</h3>
+        <div class="value">
+            ₹<span id="costPerHour">0.000</span>
+            <span class="unit">/ hour</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>Estimated 24 Hour Cost</h3>
+        <div class="value">
+            ₹<span id="dailyCost">0.00</span>
+        </div>
+    </div>
+
+</div>
+
+
+<h2 class="section-title">System Health</h2>
+
+<div class="health-grid">
+
+    <div class="health-card">
+        <h4>ESP32 Controller</h4>
+        <div class="health-value">ONLINE</div>
+    </div>
+
+    <div class="health-card">
+        <h4>Sensor Status</h4>
+        <div class="health-value">ACTIVE</div>
+    </div>
+
+    <div class="health-card">
+        <h4>Fault LED</h4>
+        <div id="ledStatus" class="health-value">OFF</div>
+    </div>
+
+    <div class="health-card">
+        <h4>Simulation Status</h4>
+        <div id="simulationStatus" class="health-value">STOPPED</div>
+    </div>
+
+</div>
+
+
+<h2 class="section-title">Real-Time Monitoring</h2>
+
+<div class="graph-grid">
+
+    <div class="graph-box">
+        <h2>Current and Power Trend</h2>
+        <canvas id="energyChart"></canvas>
+    </div>
+
+    <div class="graph-box">
+        <h2>Current Load</h2>
+        <canvas id="currentChart"></canvas>
+    </div>
+
+</div>
+
+
+<div class="controls">
+
+    <h2>System Control Panel</h2>
+
+    <button class="btn-normal" onclick="normalMode()">
+        NORMAL MODE
+    </button>
+
+    <button class="btn-warning" onclick="warningMode()">
+        WARNING MODE
+    </button>
+
+    <button class="btn-fault" onclick="faultMode()">
+        OVERCURRENT FAULT
+    </button>
+
+    <button class="btn-start" onclick="startSimulation()">
+        ▶ START SIMULATION
+    </button>
+
+    <button class="btn-stop" onclick="stopSimulation()">
+        ⏹ STOP SIMULATION
+    </button>
+
+    <button class="btn-reset" onclick="resetSystem()">
+        RESET SYSTEM
+    </button>
+
+</div>
+
+
+<h2 class="section-title">Additional Parameters</h2>
+
+<div class="cards">
+
+    <div class="card">
+        <h3>Power Factor</h3>
+        <div class="value">
+            <span id="powerFactor">0.95</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>Frequency</h3>
+        <div class="value">
+            <span id="frequency">50.0</span>
+            <span class="unit">Hz</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>Temperature</h3>
+        <div class="value">
+            <span id="temperature">28.0</span>
+            <span class="unit">°C</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>System Uptime</h3>
+        <div id="uptime" class="value">
+            00:00:00
+        </div>
+    </div>
+
+</div>
+
+
+<h2 class="section-title">System Statistics</h2>
+
+<div class="stats-grid">
+
+    <div class="stat-box">
+        <h4>Maximum Current</h4>
+        <div id="maxCurrent" class="stat-value">0.00 A</div>
+    </div>
+
+    <div class="stat-box">
+        <h4>Average Current</h4>
+        <div id="avgCurrent" class="stat-value">0.00 A</div>
+    </div>
+
+    <div class="stat-box">
+        <h4>Maximum Power</h4>
+        <div id="maxPower" class="stat-value">0.00 W</div>
+    </div>
+
+    <div class="stat-box">
+        <h4>Fault Count</h4>
+        <div id="faultCount" class="stat-value">0</div>
+    </div>
+
+    <div class="stat-box">
+        <h4>Current Limit</h4>
+        <div class="stat-value">4.00 A</div>
+    </div>
+
+    <div class="stat-box">
+        <h4>Last Update</h4>
+        <div id="lastUpdate" class="stat-value">--</div>
+    </div>
+
+</div>
+
+
+<h2 class="section-title">Project Details</h2>
+
+<div class="info-grid">
+
+    <div class="info-box">
+
+        <h2>System Configuration</h2>
+
+        <p><b>Student:</b> Khanderao Wani</p>
+        <p><b>Microcontroller:</b> ESP32</p>
+        <p><b>Simulation Platform:</b> Wokwi</p>
+        <p><b>Operating Voltage:</b> 230 V</p>
+        <p><b>Current Threshold:</b> 4 A</p>
+        <p><b>Electricity Rate:</b> ₹8 per kWh</p>
+        <p><b>Power Formula:</b> P = V × I</p>
+        <p><b>Energy Formula:</b> E = P × Time</p>
+        <p><b>Cost Formula:</b> Cost = Energy × Rate</p>
+
+    </div>
+
+    <div class="info-box">
+
+        <h2>Project Features</h2>
+
+        <p><b>Monitoring:</b> Voltage, Current, Power and Energy</p>
+        <p><b>Cost Calculation:</b> Real-time electricity consumption cost</p>
+        <p><b>Protection:</b> Overcurrent Detection</p>
+        <p><b>Alert:</b> Fault LED Indication</p>
+        <p><b>Visualization:</b> Real-Time Graphs</p>
+        <p><b>Data Logging:</b> Monitoring History</p>
+        <p><b>Simulation:</b> Manual Start and Stop Control</p>
+
+    </div>
+
+</div>
+
+
+<h2 class="section-title">System Activity Log</h2>
+
+<div id="activityLog" class="log-box">
+
+    <div class="log-entry">
+        System initialized successfully.
+    </div>
+
+</div>
+
+
+<h2 class="section-title">Monitoring History</h2>
+
+<div class="table-box">
+
+<table>
+
+<thead>
+
+<tr>
+    <th>Time</th>
+    <th>Voltage</th>
+    <th>Current</th>
+    <th>Power</th>
+    <th>Energy</th>
+    <th>Cost</th>
+    <th>Status</th>
+</tr>
+
+</thead>
+
+<tbody id="historyTable">
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+<footer>
+    Smart Energy Monitoring System |
+    Designed by Khanderao Wani |
+    ESP32 IoT Project
+</footer>
+
+
+<script>
+
+/* =========================================
+   SYSTEM CONSTANTS
+========================================= */
+
+const voltage = 230;
+
+const currentLimit = 4.0;
+
+const warningLimit = 3.5;
+
+const electricityRate = 8.0;
+
+
+/* =========================================
+   SYSTEM VARIABLES
+========================================= */
+
+let simulationInterval = null;
+
+let uptimeInterval = null;
+
+let simulationRunning = false;
+
+let uptimeRunning = false;
+
+let currentSamples = [];
+
+let maxCurrentValue = 0;
+
+let maxPowerValue = 0;
+
+let totalEnergy = 0;
+
+let totalCost = 0;
+
+let faultCounter = 0;
+
+let previousWasFault = false;
+
+let lastUpdateTime = null;
+
+let elapsedUptimeSeconds = 0;
+
+
+/* =========================================
+   LINE GRAPH
+========================================= */
+
+const energyCtx =
+document.getElementById("energyChart").getContext("2d");
+
+const energyChart =
+new Chart(energyCtx, {
+
+    type: "line",
+
+    data: {
+
+        labels: [],
+
+        datasets: [
+
+            {
+                label: "Current (A)",
+                data: [],
+                borderWidth: 3,
+                tension: 0.35,
+                yAxisID: "y"
+            },
+
+            {
+                label: "Power (W)",
+                data: [],
+                borderWidth: 3,
+                tension: 0.35,
+                yAxisID: "y1"
+            }
+
+        ]
+
+    },
+
+    options: {
+
+        responsive: true,
+
+        scales: {
+
+            y: {
+                beginAtZero: true,
+                position: "left"
+            },
+
+            y1: {
+                beginAtZero: true,
+                position: "right",
+                grid: {
+                    drawOnChartArea: false
+                }
+            }
+
+        }
+
+    }
+
+});
+
+
+/* =========================================
+   CURRENT LOAD GRAPH
+========================================= */
+
+const currentCtx =
+document.getElementById("currentChart").getContext("2d");
+
+const currentChart =
+new Chart(currentCtx, {
+
+    type: "doughnut",
+
+    data: {
+
+        labels: [
+            "Current Load",
+            "Available Capacity"
+        ],
+
+        datasets: [
+            {
+                data: [2, 4]
+            }
+        ]
+
+    },
+
+    options: {
+        responsive: true
+    }
+
+});
+
+
+/* =========================================
+   UPDATE DASHBOARD
+========================================= */
+
+function updateDashboard(currentValue) {
+
+    const powerValue =
+    voltage * currentValue;
+
+    const now =
+    new Date();
+
+    const time =
+    now.toLocaleTimeString();
+
+
+    /* ENERGY CALCULATION */
+
+    if (lastUpdateTime !== null) {
+
+        const secondsPassed =
+        (Date.now() - lastUpdateTime) / 1000;
+
+        totalEnergy +=
+        (powerValue / 1000) *
+        (secondsPassed / 3600);
+
+    }
+
+    lastUpdateTime = Date.now();
+
+
+    /* COST CALCULATION */
+
+    totalCost =
+    totalEnergy * electricityRate;
+
+
+    /* COST PER HOUR */
+
+    const costPerHour =
+    (powerValue / 1000) *
+    electricityRate;
+
+
+    /* 24 HOUR ESTIMATE */
+
+    const dailyCost =
+    costPerHour * 24;
+
+
+    /* MAIN VALUES */
+
+    document.getElementById("voltage").innerText =
+    voltage.toFixed(2);
+
+    document.getElementById("current").innerText =
+    currentValue.toFixed(2);
+
+    document.getElementById("power").innerText =
+    powerValue.toFixed(2);
+
+    document.getElementById("energy").innerText =
+    totalEnergy.toFixed(4);
+
+    document.getElementById("cost").innerText =
+    totalCost.toFixed(4);
+
+    document.getElementById("electricityRate").innerText =
+    electricityRate.toFixed(2);
+
+    document.getElementById("costPerHour").innerText =
+    costPerHour.toFixed(3);
+
+    document.getElementById("dailyCost").innerText =
+    dailyCost.toFixed(2);
+
+    document.getElementById("lastUpdate").innerText =
+    time;
+
+
+    /* ADDITIONAL PARAMETERS */
+
+    document.getElementById("powerFactor").innerText =
+    (0.92 + Math.random() * 0.07).toFixed(2);
+
+    document.getElementById("frequency").innerText =
+    (49.8 + Math.random() * 0.4).toFixed(1);
+
+    document.getElementById("temperature").innerText =
+    (27 + Math.random() * 4).toFixed(1);
+
+
+    /* SYSTEM STATUS */
+
+    const statusBox =
+    document.getElementById("statusBox");
+
+    let status;
+
+
+    if (currentValue > currentLimit) {
+
+        status =
+        "OVERCURRENT FAULT";
+
+        statusBox.innerText =
+        "SYSTEM STATUS: OVERCURRENT FAULT";
+
+        statusBox.className =
+        "status-box fault";
+
+        document.getElementById("ledStatus").innerText =
+        "ON - FAULT ALERT";
+
+        if (!previousWasFault) {
+
+            faultCounter++;
+
+            addLog(
+                "FAULT DETECTED: Current exceeded 4 A."
+            );
+
+        }
+
+        previousWasFault = true;
+
+    }
+
+    else if (currentValue >= warningLimit) {
+
+        status =
+        "HIGH CURRENT WARNING";
+
+        statusBox.innerText =
+        "SYSTEM STATUS: HIGH CURRENT WARNING";
+
+        statusBox.className =
+        "status-box warning";
+
+        document.getElementById("ledStatus").innerText =
+        "OFF - WARNING";
+
+        previousWasFault = false;
+
+    }
+
+    else {
+
+        status =
+        "NORMAL";
+
+        statusBox.innerText =
+        "SYSTEM STATUS: NORMAL";
+
+        statusBox.className =
+        "status-box normal";
+
+        document.getElementById("ledStatus").innerText =
+        "OFF";
+
+        previousWasFault = false;
+
+    }
+
+
+    /* STATISTICS */
+
+    currentSamples.push(currentValue);
+
+    if (currentSamples.length > 50) {
+        currentSamples.shift();
+    }
+
+    maxCurrentValue =
+    Math.max(
+        maxCurrentValue,
+        currentValue
+    );
+
+    maxPowerValue =
+    Math.max(
+        maxPowerValue,
+        powerValue
+    );
+
+    const averageCurrent =
+    currentSamples.reduce(
+        (a, b) => a + b,
+        0
+    ) / currentSamples.length;
+
+
+    document.getElementById("maxCurrent").innerText =
+    maxCurrentValue.toFixed(2) + " A";
+
+    document.getElementById("avgCurrent").innerText =
+    averageCurrent.toFixed(2) + " A";
+
+    document.getElementById("maxPower").innerText =
+    maxPowerValue.toFixed(2) + " W";
+
+    document.getElementById("faultCount").innerText =
+    faultCounter;
+
+
+    /* UPDATE GRAPH */
+
+    energyChart.data.labels.push(time);
+
+    energyChart.data.datasets[0].data.push(
+        currentValue
+    );
+
+    energyChart.data.datasets[1].data.push(
+        powerValue
+    );
+
+
+    if (energyChart.data.labels.length > 12) {
+
+        energyChart.data.labels.shift();
+
+        energyChart.data.datasets[0].data.shift();
+
+        energyChart.data.datasets[1].data.shift();
+
+    }
+
+    energyChart.update();
+
+
+    /* CURRENT LOAD GRAPH */
+
+    currentChart.data.datasets[0].data = [
+
+        Math.min(currentValue, 6),
+
+        Math.max(0, 6 - currentValue)
+
+    ];
+
+    currentChart.update();
+
+
+    /* HISTORY */
+
+    addHistory(
+        time,
+        currentValue,
+        powerValue,
+        status
+    );
+
+}
+
+
+/* =========================================
+   MONITORING HISTORY
+========================================= */
+
+function addHistory(
+    time,
+    currentValue,
+    powerValue,
+    status
+) {
+
+    const table =
+    document.getElementById("historyTable");
+
+    const row =
+    table.insertRow(0);
+
+    row.innerHTML =
+
+    "<td>" + time + "</td>" +
+
+    "<td>" +
+    voltage.toFixed(2) +
+    " V</td>" +
+
+    "<td>" +
+    currentValue.toFixed(2) +
+    " A</td>" +
+
+    "<td>" +
+    powerValue.toFixed(2) +
+    " W</td>" +
+
+    "<td>" +
+    totalEnergy.toFixed(4) +
+    " kWh</td>" +
+
+    "<td>₹" +
+    totalCost.toFixed(4) +
+    "</td>" +
+
+    "<td>" +
+    status +
+    "</td>";
+
+
+    if (table.rows.length > 10) {
+
+        table.deleteRow(
+            table.rows.length - 1
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   ACTIVITY LOG
+========================================= */
+
+function addLog(message) {
+
+    const log =
+    document.getElementById("activityLog");
+
+    const entry =
+    document.createElement("div");
+
+    entry.className =
+    "log-entry";
+
+    entry.innerText =
+    "[" +
+    new Date().toLocaleTimeString() +
+    "] " +
+    message;
+
+    log.prepend(entry);
+
+
+    if (log.children.length > 15) {
+
+        log.removeChild(
+            log.lastChild
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   UPTIME TIMER
+========================================= */
+
+function startUptime() {
+
+    if (uptimeRunning) {
+        return;
+    }
+
+    uptimeRunning = true;
+
+    uptimeInterval =
+    setInterval(function() {
+
+        elapsedUptimeSeconds++;
+
+        updateUptimeDisplay();
+
+    }, 1000);
+
+}
+
+
+function stopUptime() {
+
+    if (uptimeInterval !== null) {
+
+        clearInterval(
+            uptimeInterval
+        );
+
+        uptimeInterval = null;
+
+    }
+
+    uptimeRunning = false;
+
+}
+
+
+function updateUptimeDisplay() {
+
+    const hours =
+    Math.floor(
+        elapsedUptimeSeconds / 3600
+    );
+
+    const minutes =
+    Math.floor(
+        (elapsedUptimeSeconds % 3600) / 60
+    );
+
+    const seconds =
+    elapsedUptimeSeconds % 60;
+
+
+    document.getElementById("uptime").innerText =
+
+    String(hours).padStart(2, "0") +
+
+    ":" +
+
+    String(minutes).padStart(2, "0") +
+
+    ":" +
+
+    String(seconds).padStart(2, "0");
+
+}
+
+
+/* =========================================
+   START SIMULATION
+========================================= */
+
+function startSimulation() {
+
+    if (simulationRunning) {
+
+        addLog(
+            "Simulation is already running."
+        );
+
+        return;
+
+    }
+
+
+    simulationRunning = true;
+
+
+    document.getElementById(
+        "simulationStatus"
+    ).innerText =
+    "RUNNING";
+
+
+    document.getElementById(
+        "topStatus"
+    ).innerText =
+    "● LIVE MONITORING";
+
+
+    addLog(
+        "Live simulation started."
+    );
+
+
+    startUptime();
+
+
+    let step = 0;
+
+
+    simulationInterval =
+    setInterval(function() {
+
+        let currentValue;
+
+
+        /* NORMAL */
+
+        if (step < 4) {
+
+            currentValue =
+            Number(
+                (
+                    1.5 +
+                    Math.random() * 1.0
+                ).toFixed(2)
+            );
+
+        }
+
+
+        /* WARNING */
+
+        else if (step < 7) {
+
+            currentValue =
+            Number(
+                (
+                    3.5 +
+                    Math.random() * 0.4
+                ).toFixed(2)
+            );
+
+        }
+
+
+        /* FAULT */
+
+        else {
+
+            currentValue =
+            Number(
+                (
+                    4.5 +
+                    Math.random() * 1.0
+                ).toFixed(2)
+            );
+
+        }
+
+
+        updateDashboard(
+            currentValue
+        );
+
+
+        step++;
+
+
+        if (step >= 10) {
+            step = 0;
+        }
+
+
+    }, 2000);
+
+}
+
+
+/* =========================================
+   STOP SIMULATION
+========================================= */
+
+function stopSimulation() {
+
+    if (simulationInterval !== null) {
+
+        clearInterval(
+            simulationInterval
+        );
+
+        simulationInterval = null;
+
+    }
+
+
+    stopUptime();
+
+
+    if (simulationRunning) {
+
+        addLog(
+            "Simulation and uptime timer stopped."
+        );
+
+    }
+
+
+    simulationRunning = false;
+
+
+    document.getElementById(
+        "simulationStatus"
+    ).innerText =
+    "STOPPED";
+
+
+    document.getElementById(
+        "topStatus"
+    ).innerText =
+    "● SYSTEM PAUSED";
+
+}
+
+
+/* =========================================
+   NORMAL MODE
+========================================= */
+
+function normalMode() {
+
+    stopSimulation();
+
+    addLog(
+        "Manual NORMAL MODE activated."
+    );
+
+    updateDashboard(2.00);
+
+}
+
+
+/* =========================================
+   WARNING MODE
+========================================= */
+
+function warningMode() {
+
+    stopSimulation();
+
+    addLog(
+        "Manual WARNING MODE activated."
+    );
+
+    updateDashboard(3.70);
+
+}
+
+
+/* =========================================
+   FAULT MODE
+========================================= */
+
+function faultMode() {
+
+    stopSimulation();
+
+    addLog(
+        "Manual OVERCURRENT FAULT activated."
+    );
+
+    updateDashboard(5.00);
+
+}
+
+
+/* =========================================
+   RESET SYSTEM
+========================================= */
+
+function resetSystem() {
+
+    stopSimulation();
+
+
+    currentSamples = [];
+
+    maxCurrentValue = 0;
+
+    maxPowerValue = 0;
+
+    totalEnergy = 0;
+
+    totalCost = 0;
+
+    faultCounter = 0;
+
+    previousWasFault = false;
+
+    lastUpdateTime = null;
+
+    elapsedUptimeSeconds = 0;
+
+
+    updateUptimeDisplay();
+
+
+    document.getElementById(
+        "historyTable"
+    ).innerHTML = "";
+
+
+    energyChart.data.labels = [];
+
+    energyChart.data.datasets[0].data = [];
+
+    energyChart.data.datasets[1].data = [];
+
+    energyChart.update();
+
+
+    currentChart.data.datasets[0].data =
+    [2, 4];
+
+    currentChart.update();
+
+
+    document.getElementById(
+        "activityLog"
+    ).innerHTML = "";
+
+
+    document.getElementById(
+        "maxCurrent"
+    ).innerText =
+    "0.00 A";
+
+
+    document.getElementById(
+        "avgCurrent"
+    ).innerText =
+    "0.00 A";
+
+
+    document.getElementById(
+        "maxPower"
+    ).innerText =
+    "0.00 W";
+
+
+    document.getElementById(
+        "faultCount"
+    ).innerText =
+    "0";
+
+
+    document.getElementById(
+        "cost"
+    ).innerText =
+    "0.0000";
+
+
+    document.getElementById(
+        "energy"
+    ).innerText =
+    "0.0000";
+
+
+    addLog(
+        "System reset completed."
+    );
+
+
+    document.getElementById(
+        "simulationStatus"
+    ).innerText =
+    "STOPPED";
+
+
+    document.getElementById(
+        "topStatus"
+    ).innerText =
+    "● SYSTEM READY";
+
+
+    document.getElementById(
+        "statusBox"
+    ).innerText =
+    "SYSTEM STATUS: READY";
+
+
+    document.getElementById(
+        "statusBox"
+    ).className =
+    "status-box normal";
+
+
+    document.getElementById(
+        "ledStatus"
+    ).innerText =
+    "OFF";
+
+}
+
+
+/* =========================================
+   INITIALIZATION
+========================================= */
+
+updateUptimeDisplay();
+
+addLog(
+    "ESP32 Smart Energy Monitoring Dashboard initialized."
+);
+
+</script>
+
+</body>
+</html>
