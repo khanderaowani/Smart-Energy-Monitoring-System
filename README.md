@@ -418,11 +418,15 @@ The **Smart Energy Monitoring System** demonstrates the integration of:
 - Web-Based Data Visualization
 
 This project provides a foundation that can be further developed into a real-time IoT-based energy monitoring solution.
+##  Live Demo
+
+**View the live Smart Energy Monitoring Dashboard here:**
+
+https://khanderaowani.github.io/Smart-Energy-Monitoring-System/
 
 ---
 
 ## Smart Energy Monitoring System
 
-### Monitor • Analyze • Optimize
-
-⭐ If you find this project useful or interesting, consider giving the repository a star.
+### Monitor • Analyze • Optimize   
+If you find this project useful or interesting, consider giving the repository a star.
