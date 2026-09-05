@@ -59,7 +59,7 @@ Power = 460 W
 
 ---
 
-## ⚡ Energy Consumption Calculation
+##  Energy Consumption Calculation
 
 Energy consumption is calculated based on the power used over time.
 
@@ -87,7 +87,7 @@ This allows the system to estimate the approximate cost of electrical energy con
 
 ---
 
-## 🚨 Overcurrent Detection
+## Overcurrent Detection
 
 The system monitors the current value continuously.
 
@@ -244,7 +244,7 @@ Check Overcurrent Limit
 
 ---
 
-# 📂 Project Structure
+# Project Structure
 
 ```text
 Smart-Energy-Monitoring-System/
@@ -267,7 +267,7 @@ Smart-Energy-Monitoring-System/
 
 ---
 
-# 📸 Project Screenshots
+#  Project Screenshots
 
 ## Smart Energy Monitoring Dashboard
 
@@ -395,11 +395,11 @@ docs/
 
 ---
 
-# 👨‍💻 Author
+#  Author
 
 ## Khanderao Wani
 
-**Electronics Engineering | VLSI Design & Verification | Embedded Systems | IoT**
+**Electronics Engineering | VLSI Design & Verification | IoT**
 
 ---
 
