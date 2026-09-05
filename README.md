@@ -273,7 +273,8 @@ Smart-Energy-Monitoring-System/
 
 The dashboard displays electrical parameters, system status, power consumption, energy usage, electricity cost, graphs, simulation controls, and system uptime.
 
-![Smart Energy Dashboard](Screenshot_5-9-2026_153218_.jpeg)
+![Smart Energy Dashboard](<img width="1763" height="3903" alt="Screenshot_5-9-2026_155536_" src="https://github.com/user-attachments/assets/d325ced8-8c35-4494-b4c7-8e37ca481744" />
+)
 
 ---
 
